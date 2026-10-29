@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Colour themes. Values are space-separated RGB channels so Tailwind opacity
+   modifiers work (e.g. bg-accent/20). Keep the keys in sync with lib/themes.ts.
+   --------------------------------------------------------------------------- */
+
+/* 1. Electric — the brief's default: near-black + electric blue */
+:root,
+[data-theme="electric"] {
+  --ink: 10 10 11;
+  --ink-raised: 22 22 26;
+  --ink-fg: 250 250 250;
+  --ink-muted: 161 161 170;
+  --ink-line: 39 39 45;
+
+  --paper: 255 255 255;
+  --paper-subtle: 247 247 248;
+  --paper-fg: 10 10 11;
+  --paper-muted: 82 82 91;
+  --paper-line: 229 231 235;
+
+  --accent: 47 107 255;
+  --accent-hover: 28 88 240;
+  --accent-fg: 255 255 255;
+  --accent-ink: 37 87 230;
+  --accent-glow: 0 170 255;
+}
+
+/* 2. Noir & Gold — warm black, ivory and champagne gold */
+[data-theme="gold"] {
+  --ink: 12 12 14;
+  --ink-raised: 26 25 23;
+  --ink-fg: 246 242 234;
+  --ink-muted: 170 163 150;
+  --ink-line: 44 41 36;
+
+  --paper: 255 254 251;
+  --paper-subtle: 247 244 238;
+  --paper-fg: 20 19 17;
+  --paper-muted: 92 87 79;
+  --paper-line: 232 226 214;
+
+  --accent: 207 168 96;
+  --accent-hover: 190 150 78;
+  --accent-fg: 20 19 17;
+  --accent-ink: 138 101 36;
+  --accent-glow: 160 110 50;
+}
+
+/* 3. Aurora — deep indigo-black with violet and a cool cyan glow */
+[data-theme="aurora"] {
+  --ink: 11 10 20;
+  --ink-raised: 24 22 40;
+  --ink-fg: 248 247 252;
+  --ink-muted: 165 161 186;
+  --ink-line: 42 39 64;
+
+  --paper: 255 255 255;
+  --paper-subtle: 248 247 252;
+  --paper-fg: 15 13 26;
+  --paper-muted: 84 80 102;
+  --paper-line: 230 228 240;
+
+  --accent: 124 92 255;
+  --accent-hover: 108 74 246;
+  --accent-fg: 255 255 255;
+  --accent-ink: 98 62 232;
+  --accent-glow: 56 189 248;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper text-paper-fg font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Offset anchor jumps so headings aren't hidden under the sticky navbar */
+  section[id] {
+    scroll-margin-top: 72px;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-fg;
+  }
+
+  /* accent-ink keeps the ring >= 3:1 on light surfaces (gold's accent is too
+     pale on white); dark surfaces opt back into the brighter accent. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent-ink ring-offset-2 ring-offset-paper;
+  }
+
+  [data-surface="dark"] :focus-visible {
+    @apply ring-accent ring-offset-ink;
+  }
+}
+
+@layer utilities {
+  /* Smooth colour cross-fade when the theme switches */
+  .theme-transition,
+  .theme-transition * {
+    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, fill 0.4s ease !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
